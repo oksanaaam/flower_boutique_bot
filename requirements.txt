@@ -1,0 +1,11 @@
+numpy==1.26.4
+replit==4.0.0
+Flask==3.0.3
+urllib3===2.2.1
+aiogram==2.25.1
+emoji==2.12.1
+geopy==2.4.1
+pandas==2.2.2
+python-dotenv==1.0.1
+pillow==10.3.0
+pytz==2024.1

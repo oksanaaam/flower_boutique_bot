@@ -1,16 +1,134 @@
-This project is a simple example of telegram bot.
-
-# Prerequisites
-Python 3.7 or higher
-Poetry for managing dependencies
+### flower_boutique_bot
 
 
-# Getting Started
-Set up your environment variables by copying the values from the .env.example file.
+## Introduction
+This Telegram bot allows users to browse and order different types of flowers from the flower shop.   
+It also provides an admin panel for managing orders, users, prices, and sending announcements to users.
 
-Install the required Python dependencies using Poetry:
-pip install poetry
+## Features
+- **User Features**:
+  - Browse and order flowers
+  - Choose between Ukrainian and English languages
+  - Receive help using the bot
 
-## Start the server:
-cd Flower_Bot
-poetry run python app.py
+- **Admin Features**:
+  - Authentication for accessing admin panel
+  - View orders and users
+  - Modify prices or photos of bouquets
+  - Send announcements to users
+  
+
+## Project Structure:
+```
+├── .github
+│   ├── workflows
+│       └── github-actions.yml
+├── Flower_Bot
+│   ├── database
+│       └── __init__.py
+│       └── sqlite_db_user.py
+│   ├── handlers
+│       └── admins
+│           └── __init__.py
+│           └── admin.py
+│       └── eng_users
+│           └── __init__.py
+│           └── english_each_bouquet.py
+│       └── ukr_users
+│           └── __init__.py
+│           └── backs.py
+│           └── comment.py
+│           └── each_bouquet.py
+│           └── inline_handlers.py
+│           └── purchase.py
+│           └── states.py
+│       └── __init__.py
+│   ├── imgs
+│   ├── keyboards
+│       └── inline
+│           └── __init__.py
+│           └── callback_datas.py
+│           └── choice_inline_buttons.py
+│           └── english_choise_inline_buttons.py
+│       └── reply
+│           └── __init__.py
+│           └── choise_reply_buttons.py
+│           └── english_choise_reply_buttons.py
+│       └── __init__.py
+│   ├── tests
+│       └── __init__.py
+│   ├── app.py
+│   ├── loader.py
+│ 
+├── .env.example
+├── .gitignore
+├── mypy.ini
+├── poetry.lock
+├── pyproject.toml
+├── README.md
+```
+Flower_Bot: Main module or package for the flower shop bot.  
+Handlers: Contains handlers for various user interactions.  
+Keyboards: Holds definitions for different keyboard layouts used in the bot.  
+Database: Likely contains database-related code or utilities.  
+Tests: For testing your bot functionality.  
+Img: Stores images used in the bot.  
+
+## Dependencies
+- Python 3.7 or higher
+- [Poetry](https://python-poetry.org/)
+- aiogram
+- sqlite3
+
+## Getting Started
+
+### Environment Setup
+
+1. **Clone the repository:**
+   ```
+   git clone https://github.com/oksanaaam/flower_boutique_bot.git
+
+2. **Set up your environment variables:** 
+   ``` 
+    python -m venv venv
+    venv\Scripts\activate (on Windows)
+    source venv/bin/activate (on macOS)
+    pip install -r requirements.txt
+   
+Copy the values from the .env.example and fill in the required values:  
+
+TOKEN= telegram token for using bot
+PASSWORD= admin password for managing admin panel
+ADMIN_ID= telegram id user which could manage orders and users
+
+### Dependency Installation
+
+1. Install Poetry:
+   ```
+   pip install poetry
+   
+2. Install project dependencies:
+   ```
+   poetry install
+
+### Running the Server
+1. Start the server:
+   ```
+   cd Flower_Bot
+   poetry run python app.py
+
+To use the bot, follow these steps:  
+1. Start the bot by typing `/start`.
+2. Choose your preferred language.
+3. Browse the menu to select the type of bouquet.
+4. Follow the prompts to complete the order process.
+
+## Admin Panel
+To access the admin panel:  
+1. Type `/admin` to authenticate as an admin.
+2. Use the provided commands to manage orders, users, and settings.
+
+## Commands
+- `/start`: Start the bot and select language.
+- `/admin`: Access the admin panel.
+- `/help`: Get help with using the bot.

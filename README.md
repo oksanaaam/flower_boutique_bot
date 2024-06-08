@@ -74,6 +74,12 @@ Database: Likely contains database-related code or utilities.
 Tests: For testing your bot functionality.  
 Img: Stores images used in the bot.  
 
+## Code Style Tools
+- **Black** (Version 23.9.1): Black is a Python code formatter that reformats your code to ensure a consistent style throughout your codebase.
+- **Mypy** (Version 1.5.1): Mypy is an optional static type checker for Python that aims to combine the benefits of dynamic (or "duck") typing and static typing.
+- **Deptry** (Version 0.12.0): Deptry is a dependency management tool for Python that helps in managing and documenting your project's dependencies.
+
+
 ## Dependencies
 - Python 3.7 or higher
 - [Poetry](https://python-poetry.org/)

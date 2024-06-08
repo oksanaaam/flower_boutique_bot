@@ -13,7 +13,8 @@ from loader import bot, dp
 db = sqlite3.connect("flower.db")
 cursor = db.cursor()
 
-def number_to_emoji(number):
+
+def number_to_emoji(number: int) -> str:
     emoji_digits = [
         "0️⃣",
         "1️⃣",
@@ -41,8 +42,9 @@ button_labels = [
     "⬅ Back to menu",
 ]
 
+
 @dp.message_handler(lambda message: message.text == "📥 Basket")
-async def check_basket(message: types.Message):
+async def check_basket(message: types.Message) -> None:
     cursor.execute(
         "SELECT how_many, bouquet, how_much_it FROM shopping WHERE is_fulfilled = ? and user_id = ?",
         ("No", message.chat.id),
@@ -56,7 +58,17 @@ async def check_basket(message: types.Message):
     select = cursor.fetchall()
     set_select = set([entry[0] for entry in select])
     ukr = ["101", "201", "301", "401", "501", "601", "701", "1001", "Коробка"]
-    eng = ["101 roses", "201 roses", "301 roses", "401 roses", "501 roses", "601 roses", "701 roses", "1001 roses", "Box"]
+    eng = [
+        "101 roses",
+        "201 roses",
+        "301 roses",
+        "401 roses",
+        "501 roses",
+        "601 roses",
+        "701 roses",
+        "1001 roses",
+        "Box",
+    ]
     get_it = dict(zip(ukr, eng))
     key = [
         types.InlineKeyboardButton(
@@ -73,9 +85,7 @@ async def check_basket(message: types.Message):
             ],
             [
                 InlineKeyboardButton(text="⬅ Назад", callback_data="close"),
-                InlineKeyboardButton(
-                    text="🗑 Empty basket", callback_data="clear_to_"
-                ),
+                InlineKeyboardButton(text="🗑 Empty basket", callback_data="clear_to_"),
             ],
         ]
     ).add(*key)
@@ -122,7 +132,7 @@ async def check_basket(message: types.Message):
         await message.reply("📥 Your basket is empty")
 
 
-async def button_handler(message: types.Message, state: FSMContext):
+async def button_handler(message: types.Message, state: FSMContext) -> None:
     if message.text == "⬅ Back to menu":
         await message.answer("Select one of the following:", reply_markup=Menu_eng)
     else:
@@ -131,7 +141,10 @@ async def button_handler(message: types.Message, state: FSMContext):
 
         sp = button_label.split()[0]
         for choice_eng in how_much_choise_eng:
-            if choice_eng.inline_keyboard[1][0].callback_data.split(":")[2].split()[0] == sp:
+            if (
+                choice_eng.inline_keyboard[1][0].callback_data.split(":")[2].split()[0]
+                == sp
+            ):
                 with open(f"imgs/{sp}units.jpg", "rb") as photo_:
                     await bot.send_photo(
                         chat_id=message.chat.id,

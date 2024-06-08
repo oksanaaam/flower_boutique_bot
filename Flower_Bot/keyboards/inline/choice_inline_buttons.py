@@ -19,7 +19,8 @@ to_box = InlineKeyboardMarkup(
                 text="1", callback_data=basket_callback.new(item_name="sum", how_much=1)
             ),
             InlineKeyboardButton(
-                text="+", callback_data=basket_callback.new(item_name="plus", how_much=0)
+                text="+",
+                callback_data=basket_callback.new(item_name="plus", how_much=0),
             ),
         ],
         [

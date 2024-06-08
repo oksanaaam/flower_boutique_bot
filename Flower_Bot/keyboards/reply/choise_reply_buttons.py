@@ -37,18 +37,18 @@ Location.add(KeyboardButton(text="⬅ Назад до встановлення �
 Menu: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True)
 Box: KeyboardButton = KeyboardButton("🥡 Квіти в боксі")
 Bouquet: KeyboardButton = KeyboardButton("💐 Квіти в букеті")
-Basket: KeyboardButton = KeyboardButton("📥 Корзина")
+Basket = KeyboardButton("📥 Корзина")
 Back_to_Menu: KeyboardButton = KeyboardButton("⬅ Назад")
 Menu.add(Box).insert(Bouquet).add(Basket).add(Back_to_Menu)
 
 # Box Keyboards
-Box: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True)
+Box = ReplyKeyboardMarkup(resize_keyboard=True)
 Back_to_Box: KeyboardButton = KeyboardButton("⬅ Повернутись до меню")
 Check_basket_2: KeyboardButton = KeyboardButton("📥 Корзина")
 Box.add(Check_basket_2).add(Back_to_Box)
 
 # Bouquet keyboards
-Bouquet: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+Bouquet = ReplyKeyboardMarkup(
     [
         [KeyboardButton("101"), KeyboardButton("201")],
         [KeyboardButton("301"), KeyboardButton("401")],
@@ -70,11 +70,13 @@ Order.add(Immediately).insert(Set_time).add(Back_to_orders)
 
 # delivery keyboards
 Later_delivery_time: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True)
-Immediately_delivery_time: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True)
-Back_to_delivery_time_choice: KeyboardButton = KeyboardButton("⬅ Назад")
-Immediately_delivery_time.add(KeyboardButton(text="📲 Номер телефону", request_contact=True)).add(
-    Back_to_delivery_time_choice
+Immediately_delivery_time: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+    resize_keyboard=True
 )
+Back_to_delivery_time_choice: KeyboardButton = KeyboardButton("⬅ Назад")
+Immediately_delivery_time.add(
+    KeyboardButton(text="📲 Номер телефону", request_contact=True)
+).add(Back_to_delivery_time_choice)
 Cancel: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True).add(
     KeyboardButton(text="⬅ Назад")
 )
@@ -127,9 +129,9 @@ Admin_change_cost.add(
 ).add(KeyboardButton(text="⬅ Повернутися до меню"))
 
 # buttons used when admin wants to go back
-Admin_back_to_choosing_roses: ReplyKeyboardMarkup = ReplyKeyboardMarkup(resize_keyboard=True).add(
-    KeyboardButton(text="⬅ Назад")
-)
+Admin_back_to_choosing_roses: ReplyKeyboardMarkup = ReplyKeyboardMarkup(
+    resize_keyboard=True
+).add(KeyboardButton(text="⬅ Назад"))
 
 # buttons used when admin wants to check new users and orders
 Admin_orders_markup = ReplyKeyboardMarkup(resize_keyboard=True)
@@ -201,7 +203,7 @@ last_agree = ReplyKeyboardMarkup(
     resize_keyboard=True,
 )
 
-keyboards_reply = {
+keyboards_reply: dict[str, dict[str, ReplyKeyboardMarkup]] = {
     "ukr": {
         "start": Start,
         "location": Location,

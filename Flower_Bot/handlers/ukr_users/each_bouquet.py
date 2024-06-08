@@ -1,3 +1,5 @@
+from typing import Any
+
 from keyboards.inline.choice_inline_buttons import how_much_choise
 from keyboards.reply.choise_reply_buttons import Each, Menu
 from aiogram.dispatcher.filters import Text
@@ -9,7 +11,7 @@ import pandas as pd
 import sqlite3
 
 
-def get_data(data):
+def get_data(data: list[tuple[Any, Any, Any]]) -> tuple[pd.DataFrame, str, str, str]:
     # df = pd.DataFrame(data, columns=["nechta", "bouquet", "narxi"])["скільки", "букет", "ціна"])
     df = pd.DataFrame(data, columns=["amount", "bouquet", "price"])
     df["price"] = [int("".join(i.split("."))) for i in df["price"]]
@@ -36,14 +38,18 @@ def get_data(data):
         else total_temp[-6:-3] + "." + total_temp[-3:]
     )
     total_price = (
-        str(total_price)[:-6] + "." + str(total_price)[-6:-3] + "." + str(total_price)[-3:]
+        str(total_price)[:-6]
+        + "."
+        + str(total_price)[-6:-3]
+        + "."
+        + str(total_price)[-3:]
         if str(total_price)[:-6] != ""
         else str(total_price)[-6:-3] + "." + str(total_price)[-3:]
     )
     return group, total_price, tariff, total
 
 
-def number_to_emoji(number):
+def number_to_emoji(number: str) -> str:
     emoji_digits = [
         "0️⃣",
         "1️⃣",
@@ -60,7 +66,7 @@ def number_to_emoji(number):
 
 
 @dp.message_handler(text=["📥 Корзина"])
-async def check_basket(message: types.Message):
+async def check_basket(message: types.Message) -> None:
     conn1 = sqlite3.connect("flower.db")
     cursor1 = conn1.cursor()
     cursor1.execute(
@@ -123,7 +129,7 @@ button_labels = [
 ]
 
 
-async def button_handler(message: types.Message, state: FSMContext):
+async def button_handler(message: types.Message, state: FSMContext) -> None:
     if message.text == "⬅ Повернутись до меню":
         await message.answer("Виберіть одне з наступного:", reply_markup=Menu)
     else:

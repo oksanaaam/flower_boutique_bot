@@ -27,9 +27,7 @@ class OrderConfirmation(StatesGroup):
     yes_or_no = State()
 
 
-class Advertisement(
-    StatesGroup
-):  # for admin
+class Advertisement(StatesGroup):  # for admin
     advertisement = State()
 
 

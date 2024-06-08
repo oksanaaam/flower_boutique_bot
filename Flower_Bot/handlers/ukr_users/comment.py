@@ -18,7 +18,7 @@ creat_db.set_db(values=query_comments)
 
 
 @dp.message_handler(text=["✍️ Comment", "✍️ Залишити коментар"])
-async def commenting(message: Message, state: FSMContext):
+async def commenting(message: Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {
@@ -41,7 +41,7 @@ async def commenting(message: Message, state: FSMContext):
 
 
 @dp.message_handler(state=Comments_.comments)
-async def write_comment(message: Message, state: FSMContext):
+async def write_comment(message: Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {"ukr": "Ви в головному меню", "eng": "You are in the main menu"}

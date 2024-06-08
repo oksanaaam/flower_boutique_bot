@@ -13,7 +13,8 @@ to_box_eng = InlineKeyboardMarkup(
                 text="1", callback_data=basket_callback.new(item_name="sum", how_much=1)
             ),
             InlineKeyboardButton(
-                text="+", callback_data=basket_callback.new(item_name="plus", how_much=0)
+                text="+",
+                callback_data=basket_callback.new(item_name="plus", how_much=0),
             ),
         ],
         [
@@ -33,7 +34,16 @@ to_box_eng = InlineKeyboardMarkup(
 
 # for each bouquet inline_buttons
 how_much_choise_eng = []
-button_labels_eng = ["101 roses", "201 roses", "301 roses", "401 roses", "501 roses", "601 roses", "701 roses", "1001 roses"]
+button_labels_eng = [
+    "101 roses",
+    "201 roses",
+    "301 roses",
+    "401 roses",
+    "501 roses",
+    "601 roses",
+    "701 roses",
+    "1001 roses",
+]
 selling_rate_eng = [
     "180.000",
     "280.000",

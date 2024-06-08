@@ -2,7 +2,12 @@ import sqlite3
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
-from aiogram.types import CallbackQuery, Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import (
+    CallbackQuery,
+    Message,
+    InlineKeyboardMarkup,
+    InlineKeyboardButton,
+)
 
 from database.sqlite_db_user import CreateDB
 from keyboards.reply.choise_reply_buttons import keyboards_reply
@@ -23,7 +28,9 @@ DL.set_db(values=values_delivery)
 
 
 @dp.callback_query_handler(Delivery.filter(item_name="Delivery"))
-async def buy_chooses(call: CallbackQuery, callback_data: dict, state: FSMContext):
+async def buy_chooses(
+    call: CallbackQuery, callback_data: dict[str, str], state: FSMContext
+) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -83,18 +90,18 @@ async def buy_chooses(call: CallbackQuery, callback_data: dict, state: FSMContex
                 None,
             )
         await DL.add_db(
-            values=values, str_v=v, how_many_values="(?,?,?,?,?,?,?,?,?,?,?)"
+            values=values, str_v=v, how_many_values="(?,?,?,?,?,?,?,?,?,?,?)"  # type: ignore[arg-type]
         )
         await States_.CHOOSING_OPTION.set()
     except:
         await bot.send_message(
             call.message.chat.id,
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command",
         )
 
 
 @dp.message_handler(text=["❌ Ні", "❌ No"], state=States_.CHOOSING_OPTION)
-async def process_cancel_style(message: Message, state: FSMContext):
+async def process_cancel_style(message: Message, state: FSMContext) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -125,7 +132,7 @@ async def process_cancel_style(message: Message, state: FSMContext):
 
 
 @dp.message_handler(text=["✅ Так", "✅ Yes"], state=States_.CHOOSING_OPTION)
-async def process_make_style(message: Message, state: FSMContext):
+async def process_make_style(message: Message, state: FSMContext) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -150,7 +157,7 @@ async def process_make_style(message: Message, state: FSMContext):
 
 
 @dp.message_handler(state=States_.STYLE_NAME)
-async def process_write(message: Message, state: FSMContext):
+async def process_write(message: Message, state: FSMContext) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -192,7 +199,7 @@ async def process_write(message: Message, state: FSMContext):
 
 
 @dp.callback_query_handler(text="confirm", state=States_.CONFIRMATION)
-async def confirm_inscription_style(call: CallbackQuery, state: FSMContext):
+async def confirm_inscription_style(call: CallbackQuery, state: FSMContext) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -265,7 +272,7 @@ async def confirm_inscription_style(call: CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(text="cancel", state=States_.CONFIRMATION)
-async def reject_inscription_style(call: CallbackQuery, state: FSMContext):
+async def reject_inscription_style(call: CallbackQuery, state: FSMContext) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -303,7 +310,7 @@ async def reject_inscription_style(call: CallbackQuery, state: FSMContext):
 
 
 @dp.callback_query_handler(lambda query: query.data.startswith("del"))
-async def delete_each_delivery(call: CallbackQuery):
+async def delete_each_delivery(call: CallbackQuery) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -441,12 +448,14 @@ async def delete_each_delivery(call: CallbackQuery):
     except:
         await bot.send_message(
             call.message.chat.id,
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command",
         )
 
 
 @dp.callback_query_handler(basket_callback.filter(item_name="minus"))
-async def subtract_the_choice(call: CallbackQuery, callback_data: dict):
+async def subtract_the_choice(
+    call: CallbackQuery, callback_data: dict[str, str]
+) -> None:
     await call.answer(cache_time=1)
     minus = -1
     text = int(call.message.reply_markup.inline_keyboard[0][1].text) + minus
@@ -463,7 +472,7 @@ async def subtract_the_choice(call: CallbackQuery, callback_data: dict):
 
 
 @dp.callback_query_handler(basket_callback.filter(item_name="sum"))
-async def how_many_choices(call: CallbackQuery, callback_data: dict):
+async def how_many_choices(call: CallbackQuery, callback_data: dict[str, str]) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -476,12 +485,12 @@ async def how_many_choices(call: CallbackQuery, callback_data: dict):
     except:
         await bot.send_message(
             call.message.chat.id,
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command",
         )
 
 
 @dp.callback_query_handler(basket_callback.filter(item_name="plus"))
-async def add_the_choice(call: CallbackQuery, callback_data: dict):
+async def add_the_choice(call: CallbackQuery, callback_data: dict[str, str]) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -512,19 +521,19 @@ async def add_the_choice(call: CallbackQuery, callback_data: dict):
     except:
         await bot.send_message(
             call.message.chat.id,
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command",
         )
 
 
 @dp.callback_query_handler(text="close")
-async def back_for_inline(call: CallbackQuery):
+async def back_for_inline(call: CallbackQuery) -> None:
     await bot.delete_message(
         chat_id=call.message.chat.id, message_id=call.message.message_id
     )
 
 
 @dp.callback_query_handler(text="clear_to_")
-async def clear_for_inline(call: CallbackQuery):
+async def clear_for_inline(call: CallbackQuery) -> None:
     conn = sqlite3.connect("flower.db")
     cursor = conn.cursor()
     cursor.execute(
@@ -539,7 +548,7 @@ async def clear_for_inline(call: CallbackQuery):
 
 
 @dp.callback_query_handler(text="open_delivery")
-async def forward_callback(call: CallbackQuery):
+async def forward_callback(call: CallbackQuery) -> None:
     try:
         t_conn = sqlite3.connect("flower.db")
         t_curr = t_conn.cursor()
@@ -558,5 +567,5 @@ async def forward_callback(call: CallbackQuery):
     except:
         await bot.send_message(
             call.message.chat.id,
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command",
         )

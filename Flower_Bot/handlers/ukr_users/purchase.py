@@ -9,7 +9,12 @@ from datetime import datetime
 
 from database.sqlite_db_user import CreateDB
 from handlers.ukr_users.each_bouquet import get_data
-from handlers.ukr_users.states import AddressState, OrderConfirmation, StateOrderTime, Translate
+from handlers.ukr_users.states import (
+    AddressState,
+    OrderConfirmation,
+    StateOrderTime,
+    Translate,
+)
 from keyboards.inline.choice_inline_buttons import inline_keyboards
 from keyboards.reply.choise_reply_buttons import keyboards_reply
 from loader import bot, dp
@@ -29,7 +34,7 @@ TRANSLATE_USER_LANG.set_db(
 
 
 @dp.message_handler(text="🇺🇦 Українська")
-async def to_ukrainian(message: types.Message):
+async def to_ukrainian(message: types.Message) -> None:
     conn, cursor = TRANSLATE_USER_LANG.query_sql()
     cursor.execute(
         "UPDATE translates_from_id SET language = ? WHERE rowid = (SELECT rowid FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1)",
@@ -39,7 +44,7 @@ async def to_ukrainian(message: types.Message):
     dict_f = {"ukr": "Ласкаво просимо до нашого квіткового магазину🌸🌷"}
     cursor.execute(
         "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-        (message.chat.id,)
+        (message.chat.id,),
     )
     select = cursor.fetchall()
     await message.answer(
@@ -48,7 +53,7 @@ async def to_ukrainian(message: types.Message):
 
 
 @dp.message_handler(text="🇺🇸 English")
-async def to_english(message: types.Message):
+async def to_english(message: types.Message) -> None:
     conn, cursor = TRANSLATE_USER_LANG.query_sql()
     cursor.execute(
         "UPDATE translates_from_id SET language = ? WHERE rowid = (SELECT rowid FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1)",
@@ -58,7 +63,7 @@ async def to_english(message: types.Message):
     dict_f = {"eng": "Hi, welcome to our flower shop🌸🌷"}
     cursor.execute(
         "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-        (message.chat.id,)
+        (message.chat.id,),
     )
     select = cursor.fetchall()
     await message.answer(
@@ -74,12 +79,12 @@ async def to_english(message: types.Message):
         types.ContentType.UNKNOWN,
     ]
 )
-async def unknown_message(msg: types.Message):
+async def unknown_message(msg: types.Message) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (msg.chat.id,)
+            (msg.chat.id,),
         )
 
         select = cursor.fetchall()
@@ -106,7 +111,7 @@ async def unknown_message(msg: types.Message):
 
 
 @dp.message_handler(commands=["start"])
-async def start_command(message: types.Message):
+async def start_command(message: types.Message) -> None:
     conn, cursor = TRANSLATE_USER_LANG.query_sql()
     try:
         cursor.execute(
@@ -116,14 +121,14 @@ async def start_command(message: types.Message):
     except:
         cursor.execute(
             "UPDATE translates_from_id SET language = ? WHERE rowid = (SELECT rowid FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1)",
-            ("ukr", int(message.chat.id))
+            ("ukr", int(message.chat.id)),
         )
 
     conn.commit()
     dict_f = {"ukr": "🇺🇦 Виберіть мову:\n🇺🇸 Choose language:"}
     cursor.execute(
         "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-        (message.chat.id,)
+        (message.chat.id,),
     )
 
     select = cursor.fetchall()
@@ -134,7 +139,7 @@ async def start_command(message: types.Message):
 
 
 @dp.message_handler(text=["🌹 Меню", "🌹 Menu"])
-async def main_menu(message: types.Message):
+async def main_menu(message: types.Message) -> None:
     try:
         dict_f = {
             "ukr": "Виберіть тип букета:",
@@ -143,7 +148,7 @@ async def main_menu(message: types.Message):
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
         await message.answer(
@@ -157,10 +162,17 @@ async def main_menu(message: types.Message):
 
 @dp.message_handler(
     Text(
-        ["🥡 Квіти в боксі", "💐 Квіти в букеті", "🥡 Flowers in a box", "💐 Flowers in a bouquet"]
+        [
+            "🥡 Квіти в боксі",
+            "💐 Квіти в букеті",
+            "🥡 Flowers in a box",
+            "💐 Flowers in a bouquet",
+        ]
     )
 )
-async def choose_type_of_flowers(message_flowers_in_box: types.Message, state: FSMContext):
+async def choose_type_of_flowers(
+    message_flowers_in_box: types.Message, state: FSMContext
+) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {
@@ -182,7 +194,7 @@ async def choose_type_of_flowers(message_flowers_in_box: types.Message, state: F
         }
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message_flowers_in_box.chat.id,)
+            (message_flowers_in_box.chat.id,),
         )
 
         select = cursor.fetchall()
@@ -211,10 +223,12 @@ async def choose_type_of_flowers(message_flowers_in_box: types.Message, state: F
             )
     except:
         await message_flowers_in_box.reply(
-            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command")
+            "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
+        )
+
 
 @dp.message_handler(text=["📭 Якнайшвидша доставка", "📭 Immediately delivery"])
-async def immediately_delivery(immediately_message: types.Message):
+async def immediately_delivery(immediately_message: types.Message) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {
@@ -223,7 +237,7 @@ async def immediately_delivery(immediately_message: types.Message):
         }
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (immediately_message.chat.id,)
+            (immediately_message.chat.id,),
         )
 
         select = cursor.fetchall()
@@ -235,7 +249,7 @@ async def immediately_delivery(immediately_message: types.Message):
         cursor1 = conn1.cursor()
         cursor1.execute(
             "UPDATE shopping SET zakaz_time_str = ? WHERE rowid = (SELECT rowid FROM shopping WHERE user_id = ? AND is_fulfilled = ? ORDER BY rowid DESC LIMIT 1)",
-            ("immediately", immediately_message.chat.id, "No")
+            ("immediately", immediately_message.chat.id, "No"),
         )
         conn1.commit()
         await AddressState.waiting_for_address.set()
@@ -245,11 +259,12 @@ async def immediately_delivery(immediately_message: types.Message):
             "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
         )
 
+
 current_time_without_year = datetime.now(ukr_date).strftime("%m.%d.%H:%M")
 
 
 @dp.message_handler(text=["⏱ Обрати час доставки", "⏱ Set delivery time"])
-async def choose_delivery_time(message_key: types.Message, state: FSMContext):
+async def choose_delivery_time(message_key: types.Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {
@@ -258,7 +273,7 @@ async def choose_delivery_time(message_key: types.Message, state: FSMContext):
         }
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message_key.chat.id,)
+            (message_key.chat.id,),
         )
         select = cursor.fetchall()
         await message_key.answer(
@@ -272,7 +287,7 @@ async def choose_delivery_time(message_key: types.Message, state: FSMContext):
 
 
 @dp.message_handler(state=StateOrderTime.start_order_time)
-async def start_typing_time(message: types.Message, state: FSMContext):
+async def start_typing_time(message: types.Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         dict_f = {
@@ -282,7 +297,6 @@ async def start_typing_time(message: types.Message, state: FSMContext):
         dict_f1 = {
             "ukr": "Надішліть адресу куди замовдяєте букет",
             "eng": "To order a bouquet, send location adress",
-
             "ukr": "🚴‍♂️Введіть адресу для доставки у форматі: Місто Львів, вул. Львівська, 1",
             "eng": "🚴‍♂️Enter the delivery address in the format: City Lviv, Lvivska street, 1",
         }
@@ -296,7 +310,7 @@ async def start_typing_time(message: types.Message, state: FSMContext):
         }
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
 
@@ -313,7 +327,9 @@ async def start_typing_time(message: types.Message, state: FSMContext):
                 # Перевірка, чи дата не швидше поточного часу
                 current_datetime = datetime.now()
                 input_datetime = datetime.strptime(
-                    str(current_datetime.year) + "-" + "-".join(message.text.split(".")),
+                    str(current_datetime.year)
+                    + "-"
+                    + "-".join(message.text.split(".")),
                     date_format,
                 )
                 if input_datetime <= current_datetime:
@@ -330,7 +346,11 @@ async def start_typing_time(message: types.Message, state: FSMContext):
                     curr = base.cursor()
                     curr.execute(
                         "UPDATE shopping SET zakaz_time_str = ? WHERE rowid = (SELECT rowid FROM shopping WHERE user_id = ? AND is_fulfilled = ? ORDER BY rowid DESC LIMIT 1)",
-                        (date_time_obj, message.chat.id, "No")  # Оновлений параметр дати
+                        (
+                            date_time_obj,
+                            message.chat.id,
+                            "No",
+                        ),  # Оновлений параметр дати
                     )
                     base.commit()
                     await AddressState.waiting_for_address.set()
@@ -343,8 +363,9 @@ async def start_typing_time(message: types.Message, state: FSMContext):
             "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
         )
 
+
 @dp.message_handler(commands=["help"])
-async def helper_function(message: types.Message):
+async def helper_function(message: types.Message) -> None:
     try:
         restart_chat = {
             "ukr": "Введіть /start, щоб перейти до головного меню",
@@ -353,15 +374,16 @@ async def helper_function(message: types.Message):
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
         await message.answer(restart_chat[select[0][0]], parse_mode="HTML")
     except:
         await message.reply("Restart the bot with /start command")
 
+
 @dp.message_handler(content_types=types.ContentType.CONTACT)
-async def handle_contact(message, state: FSMContext):
+async def handle_contact(message: types.Message, state: FSMContext) -> None:
     try:
         phone_number = (
             message.contact.phone_number
@@ -371,7 +393,7 @@ async def handle_contact(message, state: FSMContext):
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
 
@@ -393,12 +415,15 @@ async def handle_contact(message, state: FSMContext):
             )
             conn1.commit()
             cursor1.execute(
-             "SELECT * FROM shopping WHERE user_id = ? AND is_fulfilled = ?",
-             (str(message.chat.id), 'No'))
+                "SELECT * FROM shopping WHERE user_id = ? AND is_fulfilled = ?",
+                (str(message.chat.id), "No"),
+            )
             orders = cursor1.fetchall()
             conn1.close()
             if orders:
-                group, total_price, tariff, total = get_data([(i[5], i[4], i[6]) for i in orders])
+                group, total_price, tariff, total = get_data(
+                    [(i[5], i[4], i[6]) for i in orders]
+                )
 
                 df_immediately = {
                     "ukr": (
@@ -410,13 +435,19 @@ async def handle_contact(message, state: FSMContext):
                         "🏰Адреса замовлення: {}\n"
                         "🚕Час доставки замовлення: {}"
                     ).format(
-                        "\n".join([f"{i[4]}: {i[5]} шт. по {i[6]} grn" for i in orders]),
+                        "\n".join(
+                            [f"{i[4]}: {i[5]} шт. по {i[6]} grn" for i in orders]
+                        ),
                         "0.100 grn.",
                         total + " grn.",
-                        'Немає' if orders[-1][7] == 'Without inscription' else orders[-1][7],
+                        "Немає"
+                        if orders[-1][7] == "Without inscription"
+                        else orders[-1][7],
                         orders[-1][9],
                         orders[-1][12],
-                        'Якнайшвидше' if orders[-1][10] == 'immediately' else orders[-1][10]
+                        "Якнайшвидше"
+                        if orders[-1][10] == "immediately"
+                        else orders[-1][10],
                     ),
                     "eng": (
                         "🛍Your order: \n{}\n\n"
@@ -427,13 +458,15 @@ async def handle_contact(message, state: FSMContext):
                         "🏰Address: {}\n"
                         "🚕Delivery time: {}"
                     ).format(
-                        "\n".join([f"{i[4]}: {i[5]} pc. each {i[6]} grn" for i in orders]),
+                        "\n".join(
+                            [f"{i[4]}: {i[5]} pc. each {i[6]} grn" for i in orders]
+                        ),
                         "0.100 grn.",
                         total + " grn.",
                         orders[-1][7],
                         orders[-1][9],
                         orders[-1][12],
-                        orders[-1][10]
+                        orders[-1][10],
                     ),
                 }
 
@@ -455,11 +488,11 @@ async def handle_contact(message, state: FSMContext):
 
 
 @dp.message_handler(text=["❌ Ні", "❌ No"], state=OrderConfirmation.yes_or_no)
-async def last_process_no(message: types.Message, state: FSMContext):
+async def last_process_no(message: types.Message, state: FSMContext) -> None:
     conn, cursor = TRANSLATE_USER_LANG.query_sql()
     cursor.execute(
         "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-        (message.chat.id,)
+        (message.chat.id,),
     )
     select = cursor.fetchall()
     try_again = {
@@ -480,11 +513,11 @@ async def last_process_no(message: types.Message, state: FSMContext):
 
 
 @dp.message_handler(text=["✅ Так", "✅ Yes"], state=OrderConfirmation.yes_or_no)
-async def last_process_yes(message: types.Message, state: FSMContext):
+async def last_process_yes(message: types.Message, state: FSMContext) -> None:
     conn, cursor = TRANSLATE_USER_LANG.query_sql()
     cursor.execute(
         "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-        (message.chat.id,)
+        (message.chat.id,),
     )
     select = cursor.fetchall()
     dict_f = {
@@ -506,7 +539,7 @@ async def last_process_yes(message: types.Message, state: FSMContext):
                 LIMIT 1
             )
             """,
-            ("Yes", order_current_time, message.chat.id, "No")
+            ("Yes", order_current_time, message.chat.id, "No"),
         )
 
         db.commit()
@@ -520,13 +553,16 @@ async def last_process_yes(message: types.Message, state: FSMContext):
             "🇺🇦 У зв'язку з оновленням нашого бота, почніть використовувати команду\n\n🇺🇸 Due to the bot update, restart the bot with the /start command"
         )
 
-@dp.message_handler(state=AddressState.waiting_for_address, content_types=types.ContentType.TEXT)
-async def process_location_address(msg, state: FSMContext):
+
+@dp.message_handler(
+    state=AddressState.waiting_for_address, content_types=types.ContentType.TEXT
+)
+async def process_location_address(msg: types.Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (msg.chat.id,)
+            (msg.chat.id,),
         )
         select = cursor.fetchall()
 
@@ -585,15 +621,18 @@ async def process_location_address(msg, state: FSMContext):
 
 
 @dp.message_handler(text=["⚙️ Налаштування", "⚙️ Settings"])
-async def settings(message: types.Message):
+async def settings(message: types.Message) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
-        dict_f = {"ukr": "Виберіть одне з наступного:", "eng": "Choose one of the following:"}
+        dict_f = {
+            "ukr": "Виберіть одне з наступного:",
+            "eng": "Choose one of the following:",
+        }
         await message.answer(
             dict_f[select[0][0]], reply_markup=keyboards_reply[select[0][0]]["settings"]
         )
@@ -605,15 +644,18 @@ async def settings(message: types.Message):
 
 
 @dp.message_handler(state=Translate.ukr_eng)
-async def choose_language(message: types.Message, state: FSMContext):
+async def choose_language(message: types.Message, state: FSMContext) -> None:
     try:
         conn, cursor = TRANSLATE_USER_LANG.query_sql()
         cursor.execute(
             "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,)
+            (message.chat.id,),
         )
         select = cursor.fetchall()
-        dict_f = {"ukr": "Виберіть одне з наступного:", "eng": "Choose one of the following:"}
+        dict_f = {
+            "ukr": "Виберіть одне з наступного:",
+            "eng": "Choose one of the following:",
+        }
         dict_f1 = {"ukr": "Виберіть мову:", "eng": "Choose a language:"}
 
         if message.text == "⬅ Назад" or message.text == "⬅ Back":

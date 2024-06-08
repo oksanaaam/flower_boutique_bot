@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "flower-boutique-bot"
+version = "0.1.0"
+description = ""
+authors = ["oksanaaam <ksyusha0kubay@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+numpy = "1.26.4"
+replit = "4.0.0"
+urllib3 = "2.2.1"
+aiogram = "2.25.1"
+emoji = "2.12.1"
+geopy = "2.4.1"
+pandas = "2.2.2"
+python-dotenv = "1.0.1"
+pillow = "10.3.0"
+pytz = "2024.1"
+
+
+[tool.poetry.group.dev.dependencies]
+types-pytz = "^2024.1.0.20240417"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.deptry.per_rule_ignores]
+DEP001 = [
+    "handlers",
+    "loader",
+    "keyboards",
+    "database"
+]
+DEP002 = [
+    "numpy",
+    "replit",
+    "emoji",
+    "urllib3",
+    "geopy"
+]

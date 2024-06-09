@@ -3,8 +3,6 @@ from aiogram import types
 from handlers.ukr_users.purchase import TRANSLATE_USER_LANG
 from keyboards.reply.choise_reply_buttons import keyboards_reply
 from loader import dp
-from aiogram.dispatcher.handler import MessageHandler
-from typing import Callable
 
 
 @dp.message_handler(text=["⬅ Назад", "⬅ Back"])

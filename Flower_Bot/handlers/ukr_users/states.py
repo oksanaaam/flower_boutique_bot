@@ -23,6 +23,10 @@ class Translate(StatesGroup):
     ukr_eng = State()
 
 
+class HelpConversation(StatesGroup):
+    waiting_for_user_message = State()
+
+
 class OrderConfirmation(StatesGroup):
     yes_or_no = State()
 

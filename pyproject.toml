@@ -31,6 +31,7 @@ DEP001 = [
     "handlers",
     "loader",
     "keyboards",
+    "prompts",
     "database"
 ]
 DEP002 = [
@@ -39,4 +40,7 @@ DEP002 = [
     "emoji",
     "urllib3",
     "geopy"
+]
+DEP003 = [
+    "openai",
 ]

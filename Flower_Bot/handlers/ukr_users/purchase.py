@@ -23,7 +23,7 @@ from handlers.ukr_users.states import (
 from keyboards.inline.choice_inline_buttons import inline_keyboards
 from keyboards.reply.choise_reply_buttons import keyboards_reply
 from loader import bot, dp
-from prompts.generatore import context_prompt
+from prompts.generator import PromptsGenerator
 
 load_dotenv()
 
@@ -391,7 +391,7 @@ async def continue_help_conversation(message: types.Message, state: FSMContext) 
     response = openai.ChatCompletion.create(  # type: ignore[no-untyped-call]
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": context_prompt},
+            {"role": "system", "content": PromptsGenerator.instructions["bot_chat_completion"]},
             {"role": "user", "content": user_message},
         ],
     )

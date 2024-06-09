@@ -55,6 +55,9 @@ It also provides an admin panel for managing orders, users, prices, and sending 
 │           └── choise_reply_buttons.py
 │           └── english_choise_reply_buttons.py
 │       └── __init__.py
+│   ├── prompts
+│       └── __init__.py
+│       └── generator.py
 │   ├── tests
 │       └── __init__.py
 │   ├── app.py
@@ -137,4 +140,4 @@ To access the admin panel:
 ## Commands
 - `/start`: Start the bot and select language.
 - `/admin`: Access the admin panel.
-- `/help`: Get help with using the bot.
+- `/help`: Openai assistant get help with answers about the Flower Shop.

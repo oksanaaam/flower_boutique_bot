@@ -1,11 +1,15 @@
+import openai
+import os
 import sqlite3
 import pytz
 
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
+from aiogram.types import ParseMode
 from aiogram.utils.markdown import code, italic, text
 from datetime import datetime
+from dotenv import load_dotenv
 
 from database.sqlite_db_user import CreateDB
 from handlers.ukr_users.each_bouquet import get_data
@@ -14,11 +18,16 @@ from handlers.ukr_users.states import (
     OrderConfirmation,
     StateOrderTime,
     Translate,
+    HelpConversation,
 )
 from keyboards.inline.choice_inline_buttons import inline_keyboards
 from keyboards.reply.choise_reply_buttons import keyboards_reply
 from loader import bot, dp
+from prompts.generator import PromptsGenerator
 
+load_dotenv()
+
+openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 ukr_date = pytz.timezone("Europe/Kiev")
 order_current_time = datetime.now(ukr_date).strftime("%Y-%m-%d %H:%M")
@@ -364,22 +373,34 @@ async def start_typing_time(message: types.Message, state: FSMContext) -> None:
         )
 
 
-@dp.message_handler(commands=["help"])
+@dp.message_handler(commands=["help"], state="*")
 async def helper_function(message: types.Message) -> None:
     try:
-        restart_chat = {
-            "ukr": "Введіть /start, щоб перейти до головного меню",
-            "eng": "Type /start to go to the main menu",
-        }
-        conn, cursor = TRANSLATE_USER_LANG.query_sql()
-        cursor.execute(
-            "SELECT language FROM translates_from_id WHERE user_id = ? ORDER BY rowid DESC LIMIT 1",
-            (message.chat.id,),
-        )
-        select = cursor.fetchall()
-        await message.answer(restart_chat[select[0][0]], parse_mode="HTML")
+        await HelpConversation.waiting_for_user_message.set()
+        await message.answer("How can I assist you with our flower shop today?")
     except:
-        await message.reply("Restart the bot with /start command")
+        await message.reply(
+            "Sorry, there was an error. Restart the bot with /start command please"
+        )
+
+
+@dp.message_handler(state=HelpConversation.waiting_for_user_message)
+async def continue_help_conversation(message: types.Message, state: FSMContext) -> None:
+    user_message = message.text
+
+    response = openai.ChatCompletion.create(  # type: ignore[no-untyped-call]
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": PromptsGenerator.instructions["bot_chat_completion"]},
+            {"role": "user", "content": user_message},
+        ],
+    )
+
+    answer = response.choices[0].message["content"]
+    await message.answer(answer, parse_mode=ParseMode.HTML)
+
+    # Stay in the current state to continue the conversation
+    await HelpConversation.waiting_for_user_message.set()
 
 
 @dp.message_handler(content_types=types.ContentType.CONTACT)

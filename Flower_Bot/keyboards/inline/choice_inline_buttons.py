@@ -42,14 +42,14 @@ to_box = InlineKeyboardMarkup(
 how_much_choise = []
 button_labels = ["101", "201", "301", "401", "501", "601", "701", "1001"]
 selling_rate = [
-    "180.000",
-    "280.000",
-    "380.000",
-    "500.000",
-    "600.000",
-    "700.000",
-    "900.000",
-    "1800.000",
+    "3.000",
+    "6.000",
+    "10.000",
+    "14.000",
+    "19.000",
+    "26.000",
+    "31.000",
+    "40.000",
 ]
 all_zip_data = dict(zip(button_labels, selling_rate))
 for i in all_zip_data:

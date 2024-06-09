@@ -45,14 +45,14 @@ button_labels_eng = [
     "1001 roses",
 ]
 selling_rate_eng = [
-    "180.000",
-    "280.000",
-    "380.000",
-    "500.000",
-    "600.000",
-    "700.000",
-    "900.000",
-    "1800.000",
+    "3.000",
+    "6.000",
+    "10.000",
+    "14.000",
+    "19.000",
+    "26.000",
+    "31.000",
+    "40.000",
 ]
 all_zip_data_eng = dict(zip(button_labels_eng, selling_rate_eng))
 for i in all_zip_data_eng:

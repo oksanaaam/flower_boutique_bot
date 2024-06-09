@@ -1,4 +1,6 @@
 import os
+from typing import Callable
+
 import pytz
 import sqlite3 as sql
 from datetime import datetime, timedelta
@@ -51,7 +53,8 @@ ukr_date = pytz.timezone("Europe/Kiev")
 
 
 def register_handlers(
-    reply_button: types.ReplyKeyboardMarkup, function: types.Handler
+    reply_button: types.ReplyKeyboardMarkup,
+    function: Callable,  # type: ignore[type-arg]
 ) -> None:
     for row in reply_button.keyboard:
         for button in row:

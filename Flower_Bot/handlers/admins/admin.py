@@ -104,8 +104,9 @@ async def new_customers(message: Message) -> None:
 
 @dp.message_handler(user_id=ADMIN_ID, text="🥡 Вартість коробки")
 async def current_price(message: Message) -> None:
+    bouquet_price = to_box.inline_keyboard[1][0].callback_data.split(":")[-1]
     await message.answer(
-        f'Вартість коробки: {to_box.inline_keyboard[1][0].callback_data.split(":")[-1]} grn\nЯкщо ви хочете змінити ціну, напишіть нижче\nБудь ласка {to_box.inline_keyboard[1][0].callback_data.split(":")[-1]} в такому ж форматі',
+        f"Вартість коробки: {bouquet_price} grn\nЯкщо ви хочете змінити ціну, напишіть нижче\nБудь ласка {bouquet_price} в такому ж форматі",
         reply_markup=Admin_back_to_choosing_roses,
     )
     await ChangeBoxPrice.change_box_price.set()

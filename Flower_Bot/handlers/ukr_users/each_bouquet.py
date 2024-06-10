@@ -74,7 +74,6 @@ async def check_basket(message: types.Message) -> None:
         (message.chat.id, "No"),
     )
     set_select = set([i[0] for i in cursor1.fetchall()])
-    print("set_select in basket", set_select)
     key = [
         types.InlineKeyboardButton(text="❌" + i, callback_data="del{}".format(i))
         for i in set_select
@@ -103,10 +102,8 @@ async def check_basket(message: types.Message) -> None:
         ("No", message.chat.id),
     )
     query = cursor.fetchall()
-    # print("query", query)
     if query:
         group, total_price, tariff, total = get_data(query)
-        # print("total", total, "total_price", total_price, "tariff", tariff, "group", group)
 
         await message.answer(
             f"📥 В корзині:\n{group.to_string(index=False, header=False)}\nТовар: {str(total_price)} grn\nДоставка: {tariff}\nВсього: {total} grn",

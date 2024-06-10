@@ -391,7 +391,10 @@ async def continue_help_conversation(message: types.Message, state: FSMContext) 
     response = openai.ChatCompletion.create(  # type: ignore[no-untyped-call]
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": PromptsGenerator.instructions["bot_chat_completion"]},
+            {
+                "role": "system",
+                "content": PromptsGenerator.instructions["bot_chat_completion"],
+            },
             {"role": "user", "content": user_message},
         ],
     )
